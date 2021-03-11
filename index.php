@@ -3,11 +3,12 @@
         return $a->name > $b->name;
     }
     function getMedia($dir) {
+        $enabledExtensions = ['.jpg', '.mp4'];
         $files = [];
         if ($gestor = opendir($dir)) {
             while (false !== ($entry = readdir($gestor))) {
                 $extension = strtolower( substr($entry, -4) );
-                if ($extension === '.jpg') {
+                if (in_array($extension, $enabledExtensions)) {
                     $file = new stdclass();
                     $file->name = $entry;
                     $file->extension = $extension;
@@ -26,17 +27,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comunidad Colchonera</title>
     <style type="text/css">
-        body{ margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; font-size: 75%; }
+        body{ margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; font-size: 60%; }
         #lienzo { column-count: 6; column-gap: 1px; }
         figure { margin: 0 0 1px 0; width: 100%; text-align: center; position: relative; }
         img, video{ display: block; width: 100%; height: auto; z-index: 0; }
-        figcaption{ position: absolute; z-index: 10; bottom: 0; left: 0; right: 0; text-align: center; padding: .2em; background-color: rgba(0,0,0,.5); color: white; font-size: 80%; }
-
+        figcaption{ position: absolute; z-index: 10; bottom: 0; left: 0; right: 0; text-align: center; padding: .2em; background-color: rgba(0,0,0,.5); color: white; }
+        .footer{ background-color: black; color: white; text-align: center; margin: 0; }
         @media screen and (max-width: 800px) {
-                #lienzo { column-count: 4; }
+              #lienzo { column-count: 4; }
         }
         @media screen and (max-width: 500px) {
-                #lienzo { column-count: 2; }
+              #lienzo { column-count: 2; }
         }
     </style>
 </head>
@@ -53,12 +54,13 @@
                     break;
                 case '.mp4':
 ?>
-                    <figure>Vídeo <?=$media->name?></figure>
+                    <figure><a href="./<?=$media->name?>"><video src="./<?=$media->name?>" controls></video><figcaption><?=$media->name?></figcaption></a></figure>
 <?php
                     break;
             }
         }
 ?>
     </div>
+    <p class="footer"><?php echo count($medias); ?></p>
 </body>
 </html>
